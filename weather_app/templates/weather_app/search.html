@@ -1,0 +1,160 @@
+{% extends 'weather_app/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Search Card -->
+        <div class="weather-card p-4 mb-4">
+            <h1 class="text-center mb-4">🌤️ Weather App</h1>
+            
+            <form method="post" class="mb-4">
+                {% csrf_token %}
+                <div class="row g-2">
+                    <div class="col-md-9">
+                        <input type="text" 
+                               name="city_name" 
+                               class="form-control form-control-lg search-box" 
+                               placeholder="Enter city name (e.g., London, Tokyo, Chennai)..."
+                               required>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-search btn-lg w-100">
+                            <i class="fas fa-search me-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Error Message -->
+            {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Weather Data Card -->
+        {% if weather_data %}
+        <div class="weather-card p-4">
+            <div class="row align-items-center">
+                <!-- Main Weather Info -->
+                <div class="col-md-6 text-center">
+                    <div class="weather-icon">
+                        {% if weather_data.icon|length <= 4 %}
+                            {{ weather_data.icon }}
+                        {% else %}
+                            <img src="http://openweathermap.org/img/w/{{ weather_data.icon }}.png" 
+                                 alt="{{ weather_data.description }}"
+                                 class="img-fluid">
+                        {% endif %}
+                    </div>
+                    <div class="temperature">{{ weather_data.temperature }}°C</div>
+                    <div class="weather-desc mb-3">{{ weather_data.description }}</div>
+                    <h2 class="city-name">
+                        {{ weather_data.city }}
+                        {% if weather_data.country != 'N/A' %}
+                        <small class="text-muted">, {{ weather_data.country }}</small>
+                        {% endif %}
+                    </h2>
+                </div>
+
+                <!-- Weather Details -->
+                <div class="col-md-6">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="detail-card">
+                                <div class="detail-value">
+                                    <i class="fas fa-temperature-low text-primary"></i>
+                                    {{ weather_data.feels_like }}°C
+                                </div>
+                                <div class="detail-label">Feels Like</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-card">
+                                <div class="detail-value">
+                                    <i class="fas fa-tint text-info"></i>
+                                    {{ weather_data.humidity }}%
+                                </div>
+                                <div class="detail-label">Humidity</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-card">
+                                <div class="detail-value">
+                                    <i class="fas fa-wind text-warning"></i>
+                                    {{ weather_data.wind_speed }}
+                                    <small class="fs-6">
+                                        {% if weather_data.wind_speed|length <= 2 %}m/s{% else %}km/h{% endif %}
+                                    </small>
+                                </div>
+                                <div class="detail-label">Wind Speed</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-card">
+                                <div class="detail-value">
+                                    <i class="fas fa-map-marker-alt text-danger"></i>
+                                </div>
+                                <div class="detail-label">Location</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Quick Cities -->
+        <div class="weather-card p-4 mt-4">
+            <h5 class="text-center mb-3">Try these cities:</h5>
+            <div class="row g-2 text-center">
+                <div class="col-4 col-md-2">
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="city_name" value="London">
+                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">London</button>
+                    </form>
+                </div>
+                <div class="col-4 col-md-2">
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="city_name" value="New York">
+                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">New York</button>
+                    </form>
+                </div>
+                <div class="col-4 col-md-2">
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="city_name" value="Tokyo">
+                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">Tokyo</button>
+                    </form>
+                </div>
+                <div class="col-4 col-md-2">
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="city_name" value="Paris">
+                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">Paris</button>
+                    </form>
+                </div>
+                <div class="col-4 col-md-2">
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="city_name" value="Sydney">
+                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">Sydney</button>
+                    </form>
+                </div>
+                <div class="col-4 col-md-2">
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="city_name" value="Chennai">
+                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">Chennai</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
